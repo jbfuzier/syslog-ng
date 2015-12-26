@@ -101,6 +101,8 @@ append_unsafe_utf8_as_escaped_binary(GString *escaped_string, const gchar *str, 
               g_string_append_printf(escaped_string, "\\x%02x", uchar);
             else if (_is_character_unsafe(uchar, unsafe_chars))
               g_string_append_printf(escaped_string, "\\%c", (gchar) uchar);
+            else if (uchar < 0xc0)
+              g_string_append_c(escaped_string, (gchar) uchar);
             else
               g_string_append_unichar(escaped_string, uchar);
             break;
@@ -178,6 +180,8 @@ append_unsafe_utf8_as_escaped_text(GString *escaped_string, const gchar *str, co
               g_string_append_printf(escaped_string, "\\u%04x", uchar);
             else if (_is_character_unsafe(uchar, unsafe_chars))
               g_string_append_printf(escaped_string, "\\%c", (gchar) uchar);
+            else if (uchar < 0xc0)
+              g_string_append_c(escaped_string, (gchar) uchar);
             else
               g_string_append_unichar(escaped_string, uchar);
             break;
