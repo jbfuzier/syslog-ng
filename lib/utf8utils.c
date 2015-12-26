@@ -23,6 +23,18 @@
 #include "utf8utils.h"
 #include <string.h>
 
+static inline gboolean
+_is_character_unsafe(gunichar uchar, const gchar *unsafe_chars)
+{
+  if (uchar >= 256)
+    return FALSE;
+
+  if (!unsafe_chars)
+    return FALSE;
+
+  return strchr(unsafe_chars, (gchar) uchar) != NULL;
+}
+
 /**
  * This function escapes an unsanitized input (e.g. that can contain binary
  * characters, and produces an escaped format that can be deescaped in need,
@@ -81,7 +93,7 @@ append_unsafe_utf8_as_escaped_binary(GString *escaped_string, const gchar *str, 
           default:
             if (uchar < 32)
               g_string_append_printf(escaped_string, "\\x%02x", uchar);
-            else if (uchar < 256 && unsafe_chars && strchr(unsafe_chars, (gchar) uchar))
+            else if (_is_character_unsafe(uchar, unsafe_chars))
               g_string_append_printf(escaped_string, "\\%c", (gchar) uchar);
             else
               g_string_append_unichar(escaped_string, uchar);
@@ -158,7 +170,7 @@ append_unsafe_utf8_as_escaped_text(GString *escaped_string, const gchar *str, co
           default:
             if (uchar < 32)
               g_string_append_printf(escaped_string, "\\u%04x", uchar);
-            else if (uchar < 256 && unsafe_chars && strchr(unsafe_chars, (gchar) uchar))
+            else if (_is_character_unsafe(uchar, unsafe_chars))
               g_string_append_printf(escaped_string, "\\%c", (gchar) uchar);
             else
               g_string_append_unichar(escaped_string, uchar);
