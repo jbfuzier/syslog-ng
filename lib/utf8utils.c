@@ -97,11 +97,11 @@ append_unsafe_utf8_as_escaped_binary(GString *escaped_string, const gchar *str, 
             g_string_append(escaped_string, "\\\\");
             break;
           default:
-            if (uchar < 32)
+            if (G_UNLIKELY(uchar < 32))
               g_string_append_printf(escaped_string, "\\x%02x", uchar);
-            else if (_is_character_unsafe(uchar, unsafe_chars))
+            else if (G_UNLIKELY(_is_character_unsafe(uchar, unsafe_chars)))
               g_string_append_printf(escaped_string, "\\%c", (gchar) uchar);
-            else if (uchar < 0xc0)
+            else if (G_LIKELY(uchar < 0xc0))
               g_string_append_c(escaped_string, (gchar) uchar);
             else
               g_string_append_unichar(escaped_string, uchar);
@@ -176,11 +176,11 @@ append_unsafe_utf8_as_escaped_text(GString *escaped_string, const gchar *str, co
             g_string_append(escaped_string, "\\\\");
             break;
           default:
-            if (uchar < 32)
+            if (G_UNLIKELY(uchar < 32))
               g_string_append_printf(escaped_string, "\\u%04x", uchar);
-            else if (_is_character_unsafe(uchar, unsafe_chars))
+            else if (G_UNLIKELY(_is_character_unsafe(uchar, unsafe_chars)))
               g_string_append_printf(escaped_string, "\\%c", (gchar) uchar);
-            else if (uchar < 0xc0)
+            else if (G_LIKELY(uchar < 0xc0))
               g_string_append_c(escaped_string, (gchar) uchar);
             else
               g_string_append_unichar(escaped_string, uchar);
