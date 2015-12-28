@@ -66,7 +66,7 @@ typedef struct
 } json_state_t;
 
 static inline void
-g_string_append_escaped(GString *dest, const char *str)
+_append_escaped_json_string(GString *dest, const char *str)
 {
   append_unsafe_utf8_as_escaped_text(dest, str, "\"");
 }
@@ -85,7 +85,7 @@ tf_json_obj_start(const gchar *name,
   if (name)
     {
       g_string_append_c(state->buffer, '"');
-      g_string_append_escaped(state->buffer, name);
+      _append_escaped_json_string(state->buffer, name);
       g_string_append(state->buffer, "\":{");
     }
   else
@@ -119,14 +119,14 @@ tf_json_append_value(const gchar *name, const gchar *value,
     g_string_append_c(state->buffer, ',');
 
   g_string_append_c(state->buffer, '"');
-  g_string_append_escaped(state->buffer, name);
+  _append_escaped_json_string(state->buffer, name);
 
   if (quoted)
     g_string_append(state->buffer, "\":\"");
   else
     g_string_append(state->buffer, "\":");
 
-  g_string_append_escaped(state->buffer, value);
+  _append_escaped_json_string(state->buffer, value);
 
   if (quoted)
     g_string_append_c(state->buffer, '"');
