@@ -32,7 +32,13 @@ _is_character_unsafe(gunichar uchar, const gchar *unsafe_chars)
   if (!unsafe_chars)
     return FALSE;
 
-  return strchr(unsafe_chars, (gchar) uchar) != NULL;
+  if ((gchar) uchar == unsafe_chars[0])
+    return TRUE;
+
+  if (!unsafe_chars[1])
+    return FALSE;
+
+  return strchr(unsafe_chars + 1, (gchar) uchar) != NULL;
 }
 
 /**
