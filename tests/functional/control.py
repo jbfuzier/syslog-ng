@@ -32,7 +32,6 @@ def start_syslogng(conf, keep_persist=False, verbose=False):
     if syslogng_pid == 0:
         os.putenv("RANDFILE", "rnd")
         module_path = get_module_path()
-        print module_path
         rc = os.execl(get_syslog_ng_binary(), get_syslog_ng_binary(), '-f', 'test.conf', '--fd-limit', '1024', '-F', verbose_opt, '-p', 'syslog-ng.pid', '-R', 'syslog-ng.persist', '--no-caps', '--enable-core', '--seed', '--module-path', module_path)
         sys.exit(rc)
     time.sleep(5)
